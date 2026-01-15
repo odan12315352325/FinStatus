@@ -9,9 +9,3 @@ class PredictRequest(BaseModel):
 
     # строго 35 чисел
     features: conlist(float, min_length=35, max_length=35)
-
-class PredictResponse(BaseModel):
-    prediction_id: int
-    model_version: str
-    reg_outputs: dict
-    risk_score: float

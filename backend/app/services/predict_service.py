@@ -5,27 +5,20 @@ from backend.app.repositories.prediction_repo import (
 )
 from ml.predictor import predict_financial_state
 
-FEATURE_KEYS = [f"f{i+1}" for i in range(35)]
-
 def predict_and_persist(payload: dict) -> dict:
     # payload: inn, company_name, year, quarter, features[35]
     features_dict = {FEATURE_KEYS[i]: payload["features"][i] for i in range(35)}
 
-    with get_conn() as conn:
-        company_id = upsert_company(conn, payload["inn"], payload.get("company_name"))
-        period_id  = upsert_period(conn, payload["year"], payload.get("quarter"))
+import math
 
-        upsert_features(conn, company_id, period_id, features_dict)
+def calc_drift_score(features_dict: dict, baseline: dict) -> float:
+    # ПСЕВДО: L2 расстояние между текущими значениями и baseline
+    s = 0.0
+    for k, v in features_dict.items():
+        b = float(baseline.get(k, 0.0))
+        x = float(v)
+        s += (x - b) ** 2
+    return math.sqrt(s)
 
-        y = predict_financial_state(payload["features"])
-
-        pred_id = insert_prediction(
-            conn, company_id, period_id,
-            y["model_version"], y["reg_outputs"], y["risk_score"]
-        )
-
-        insert_audit(conn, actor="system", action="PREDICT",
-                     entity="predictions", entity_id=pred_id,
-                     payload={"inn": payload["inn"], "year": payload["year"], "quarter": payload.get("quarter")})
-
-        return {"prediction_id": pred_id, **y}
+def drift_detected(score: float, threshold: float = 100.0) -> bool:
+    return score >= threshold
