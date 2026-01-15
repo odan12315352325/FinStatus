@@ -36,17 +36,6 @@ hidden_layer = Dense(128, activation='relu', kernel_regularizer=l2(0.001))(input
 hidden_layer = BatchNormalization()(hidden_layer)
 hidden_layer = Dropout(0.3)(hidden_layer)
 
-hidden_layer = Dense(64, activation='relu', kernel_regularizer=l2(0.001))(hidden_layer)
-hidden_layer = BatchNormalization()(hidden_layer)
-hidden_layer = Dropout(0.3)(hidden_layer)
-
-hidden_layer = Dense(32, activation='relu', kernel_regularizer=l2(0.001))(hidden_layer)
-hidden_layer = BatchNormalization()(hidden_layer)
-
-output_regression = Dense(11, name='regression_output')(hidden_layer)
-
-output_classification = Dense(1, activation='sigmoid', name='classification_output')(hidden_layer)
-
 model = Model(inputs=input_layer, outputs=[output_regression, output_classification])
 
 model.compile(optimizer=Adam(learning_rate=0.001),

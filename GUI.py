@@ -139,14 +139,6 @@ inn_entry.pack(anchor='w', pady=2)
 year_label = ctk.CTkLabel(search_frame, text="Поиск по году:", font=("Bahnschrift", 20))
 year_label.pack(anchor='w', pady=2)
 
-year_entry = ctk.CTkEntry(search_frame, font=("Bahnschrift", 18))
-year_entry.pack(anchor='w', pady=2)
-
-inn_button = ctk.CTkButton(search_frame, text="Готово", command=search_inn_year, font=("Bahnschrift", 18, "bold"))
-inn_button.pack(anchor='w', pady=2)
-
-random_button = ctk.CTkButton(search_frame, text="Рандом", command=random_inn, font=("Bahnschrift", 18, "bold"))
-random_button.pack(anchor='w', pady=2)
 
 tab_control = ttk.Notebook(root)
 
